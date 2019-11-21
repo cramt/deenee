@@ -76,7 +76,7 @@ namespace Deenee.Model {
             formatter.Serialize(mapsFile.Open(), Maps.ToArray());
             unloadedObjects.ToList().ForEach(x => {
                 string path = "objects/" + x.Key;
-                if (zip.Entries.Any(x => x.FullName == path)) {
+                if (zip.Entries.Any(y => y.FullName == path)) {
                     return;
                 }
                 var entry = zip.CreateEntry(path);
