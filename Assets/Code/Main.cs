@@ -29,7 +29,15 @@ namespace Deenee {
 
             //DiscordBehavior = new GameObject("discord handler1").AddComponent<DiscordBehavior>();
             //Campaign.New("hello");
-            Campaign.New(@"C:\Users\1080622\Documents\code\deenee\campaigns", "test");
+            
+            if (!File.Exists(@"C:\Users\1080622\Documents\code\deenee\campaigns\test.campaign")) {
+                campaign = Campaign.New(@"C:\Users\1080622\Documents\code\deenee\campaigns", "test");
+            }
+            else {
+                campaign = Campaign.Load(@"C:\Users\1080622\Documents\code\deenee\campaigns\test.campaign");
+            }
+
         }
+        public static Campaign campaign;
     }
 }

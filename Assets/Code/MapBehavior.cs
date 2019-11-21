@@ -11,8 +11,17 @@ using UnityEngine;
 namespace Deenee {
     public class MapBehavior : MainBehavior {
         public Map Map { get; set; }
+
+        private GameObject cachedObjectHandler;
+        private void UpdateCache() {
+            foreach(Renderer r in cachedObjectHandler.GetComponentsInChildren<Renderer>()) {
+                r.enabled = false;
+            }
+        }
         public override void OnStart(OnStartProperties onStartProperties) {
             base.OnStart(onStartProperties);
+            cachedObjectHandler = new GameObject("cachedObjectHandler");
+            
         }
 
         public override void OnUpdate(OnUpdateProperties onUpdateProperties) {
@@ -25,10 +34,13 @@ namespace Deenee {
                 }, true, (string[] paths) => {
                     paths.ToList().ForEach(path => {
                         Console.WriteLine(path);
-                        string[] split = new FileInfo(path).Name.Split('.');
+                        string name = new FileInfo(path).Name;
+                        string[] split = name.Split('.');
                         string nameWOext = split[0];
                         string ext = split[1];
                         if (ext == "obj") {
+                            byte[] data = File.ReadAllBytes(path);
+                            Main.campaign.AddObject(name, data);
                             InvokeFunction(() => {
                                 using (var assetLoader = new AssetLoader()) {
                                     var assetLoaderOptions = AssetLoaderOptions.CreateInstance();   //Creates the AssetLoaderOptions instance.
@@ -37,14 +49,12 @@ namespace Deenee {
 
                                     //You can modify assetLoaderOptions before passing it to LoadFromFile method. You can check the AssetLoaderOptions API reference at:
                                     //https://ricardoreis.net/trilib/manual/html/class_tri_lib_1_1_asset_loader_options.html
-
-                                    var wrapperGameObject = new GameObject(nameWOext);                             //Sets the game object where your model will be loaded into.
-                                                                                                    //(Optional) You can skip this object creation and it's parameter or pass null.
-
-                                    var myGameObject = assetLoader.LoadFromFile(path, assetLoaderOptions, wrapperGameObject);
+                                    //(Optional) You can skip this object creation and it's parameter or pass null.
+                                    UpdateCache();
+                                    var myGameObject = assetLoader.LoadFromMemory(data, name, assetLoaderOptions, cachedObjectHandler);
                                 }
                             });
-                            
+
                             /*
                             var obj = RawObject.Create(File.ReadAllText(path));
                             string name = nameWOext;
