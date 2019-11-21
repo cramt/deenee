@@ -10,9 +10,11 @@ namespace Deenee.Model {
     [Serializable]
     public class Campaign : IDisposable {
         private string path = "";
+
         public string Name { get; private set; } = "";
         private Dictionary<string, byte[]> loadedObjects = new Dictionary<string, byte[]>();
         private Dictionary<string, ZipArchiveEntry> unloadedObjects = new Dictionary<string, ZipArchiveEntry>();
+        public GameObject CachedObjectHandler { get; private set; }
         private ZipArchive zip;
         private FileStream file;
         public List<Map> Maps { get; set; } = new List<Map>();
@@ -32,7 +34,7 @@ namespace Deenee.Model {
         public void AddObject(string name, byte[] data) {
             unloadedObjects.Add(name, null);
             loadedObjects.Add(name, data);
-            Save();
+            //TODO add to zip file
         }
         private Campaign() {
 
@@ -42,6 +44,8 @@ namespace Deenee.Model {
                 Name = new FileInfo(path).Name.Split('.')[0],
                 path = path
             };
+            res.CachedObjectHandler = new GameObject("cachedObjectHandler");
+            UnityEngine.Object.DontDestroyOnLoad(res.CachedObjectHandler);
             res.file = new FileStream(path, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
             res.zip = new ZipArchive(res.file, ZipArchiveMode.Update);
             res.zip.Entries.ToList().ForEach(x => {
@@ -50,7 +54,7 @@ namespace Deenee.Model {
                 }
                 if (x.FullName == "maps") {
                     BinaryFormatter formatter = new BinaryFormatter();
-                    res.Maps = (List<Map>)formatter.Deserialize(x.Open());
+                    res.Maps = ((Map[])formatter.Deserialize(x.Open())).ToList();
                     return;
                 }
                 List<string> split = x.FullName.Split('/').ToList();
@@ -63,14 +67,22 @@ namespace Deenee.Model {
             return res;
         }
         public void Save() {
-            zip.CreateEntry("objects/");
-            var mapsFile = zip.CreateEntry("maps");
+            //TOOD, make work
+            Maps.ForEach(x => x.Campaign = null);
+            zip.GetEntry("objects/");
+            var mapsFile = zip.GetEntry("maps");
             BinaryFormatter formatter = new BinaryFormatter();
-            formatter.Serialize(mapsFile.Open(), Maps);
+            Console.WriteLine(Maps.Count);
+            formatter.Serialize(mapsFile.Open(), Maps.ToArray());
             unloadedObjects.ToList().ForEach(x => {
-                var entry = zip.CreateEntry("objects/" + x.Key);
+                string path = "objects/" + x.Key;
+                if (zip.Entries.Any(x => x.FullName == path)) {
+                    return;
+                }
+                var entry = zip.CreateEntry(path);
                 new MemoryStream(GetObject(x.Key)).CopyTo(entry.Open());
             });
+            Maps.ForEach(x => x.Campaign = this);
         }
         public static Campaign New(string path, string name) {
             path = Path.Combine(path, name + ".campaign");
@@ -79,7 +91,7 @@ namespace Deenee.Model {
                     archive.CreateEntry("objects/");
                     var mapsFile = archive.CreateEntry("maps");
                     BinaryFormatter formatter = new BinaryFormatter();
-                    formatter.Serialize(mapsFile.Open(), new List<Map>());
+                    formatter.Serialize(mapsFile.Open(), new Map[] { });
                 }
                 using (var fileStream = new FileStream(path, FileMode.Create)) {
                     memoryStream.Seek(0, SeekOrigin.Begin);
