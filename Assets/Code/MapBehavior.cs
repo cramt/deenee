@@ -12,16 +12,26 @@ namespace Deenee {
     public class MapBehavior : MainBehavior {
         public Map Map { get; set; }
 
-        private GameObject cachedObjectHandler;
         private void UpdateCache() {
-            foreach(Renderer r in cachedObjectHandler.GetComponentsInChildren<Renderer>()) {
+            foreach(Renderer r in Map.Campaign.CachedObjectHandler.GetComponentsInChildren<Renderer>()) {
                 r.enabled = false;
             }
         }
         public override void OnStart(OnStartProperties onStartProperties) {
             base.OnStart(onStartProperties);
-            cachedObjectHandler = new GameObject("cachedObjectHandler");
             
+            if (!File.Exists(@"C:\Users\1080622\Documents\code\deenee\campaigns\test.campaign")) {
+                Main.campaign = Campaign.New(@"C:\Users\1080622\Documents\code\deenee\campaigns", "test");
+            }
+            else {
+                Main.campaign = Campaign.Load(@"C:\Users\1080622\Documents\code\deenee\campaigns\test.campaign");
+            }
+            Map map = new Map();
+            map.Name = "idk";
+            map.Campaign = Main.campaign;
+            Main.campaign.Maps.Add(map);
+            Console.WriteLine(Main.campaign.Maps.Count);
+            Map = Main.campaign.Maps[0];
         }
 
         public override void OnUpdate(OnUpdateProperties onUpdateProperties) {
@@ -36,13 +46,14 @@ namespace Deenee {
                         string[] split = name.Split('.');
                         string nameWOext = split[0];
                         string ext = split[1];
-                        if (objFilter.Extensions.Contains(ext)) {
+                        if (objFilter.Extensions.Contains(ext.ToUpper())) {
                             byte[] data = File.ReadAllBytes(path);
-                            Main.campaign.AddObject(name, data);
+                            Main.campaign.AddObject(name, data);                   
                             InvokeFunction(() => {
                                 using (var assetLoader = new AssetLoader()) {
                                     var assetLoaderOptions = AssetLoaderOptions.CreateInstance();
-                                    var myGameObject = assetLoader.LoadFromMemory(data, name, assetLoaderOptions, cachedObjectHandler);
+                                    var newObj = assetLoader.LoadFromMemory(data, name, assetLoaderOptions, Map.Campaign.CachedObjectHandler);
+                                    newObj.name = name;
                                     UpdateCache();
                                 }
                             });
