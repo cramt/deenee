@@ -30,7 +30,12 @@ namespace Deenee {
                             {"yoin", new MenuEntry {
                                 Function = new Action(() => {
                                     Console.WriteLine("yo");
-                                })
+                                }),
+                                SubEntires = new Dictionary<string, MenuEntry> {
+                                    {"bruh", new MenuEntry {
+
+                                    } }
+                                }
                             } }
                         }
                     }

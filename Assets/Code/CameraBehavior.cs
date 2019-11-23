@@ -54,7 +54,7 @@ namespace Deenee {
                                         if(x.Value.SubEntires != null) {
                                             GameObject newWrapper = new GameObject();
                                             newWrapper.transform.SetParent(g.transform);
-                                            newWrapper.transform.localPosition = Vector3.right * rectTransform.rect.width;
+                                            newWrapper.transform.localPosition = (Vector3.right * rectTransform.rect.width / 2) + (Vector3.up * rectTransform.rect.height / 2);
                                             build(newWrapper, x.Value.SubEntires);
                                             void disable() {
                                                 foreach (Behaviour ui in newWrapper.GetComponentsInChildren<Behaviour>()) {
@@ -62,29 +62,22 @@ namespace Deenee {
                                                 }
                                             }
                                             void enable() {
-                                                foreach (Behaviour ui in newWrapper.GetComponentsInChildren<Behaviour>()) {
-                                                    ui.enabled = true;
+                                                var t = newWrapper.transform.GetChild(0);
+                                                for (int i = 0; i < t.childCount; i++) {
+                                                    var child = t.GetChild(i);
+                                                    child.GetComponents<Behaviour>().ToList().ForEach(z => z.enabled = true);
+                                                    for(int j = 0; j < child.childCount; j++) {
+                                                        child.GetChild(j).GetComponents<Behaviour>().ToList().ForEach(y => y.enabled = true);
+                                                    }
                                                 }
                                             }
-                                            EventTrigger eventTrigger = but.gameObject.GetComponent<EventTrigger>();
-                                            {
-                                                EventTrigger.Entry entry = new EventTrigger.Entry {
-                                                    eventID = EventTriggerType.PointerEnter
-                                                };
-                                                entry.callback.AddListener((_) => {
-                                                    Console.WriteLine("enter");
-                                                    enable();
-                                                });
-                                            }
-                                            {
-                                                EventTrigger.Entry entry = new EventTrigger.Entry {
-                                                    eventID = EventTriggerType.PointerExit
-                                                };
-                                                entry.callback.AddListener((_) => {
-                                                    Console.WriteLine("exit");
-                                                    disable();
-                                                });
-                                            }
+                                            EventBehavior eventTrigger = but.gameObject.AddComponent<EventBehavior>();
+                                            eventTrigger.AddOnPointerEnter(data => {
+                                                enable();
+                                            });
+                                            eventTrigger.AddOnPointerExit(data => {
+                                                disable();
+                                            });
                                             disable();
                                         }
                                         currHeight += rectTransform.rect.height;
@@ -94,8 +87,6 @@ namespace Deenee {
                                     wrapper.transform.localPosition += (Vector3.down * firstRect.rect.height / 2) + (Vector3.right * firstRect.rect.width / 2);
                                     currentMenu = wrapper;
                                 }
-
-
                                 GameObject canvas = GameObject.Find("Canvas");
                                 GameObject firstWrap = new GameObject("firstWrap");
                                 firstWrap.transform.SetParent(canvas.transform);
