@@ -18,7 +18,7 @@ namespace Deenee {
         }
         public override void OnStart(OnStartProperties onStartProperties) {
             base.OnStart(onStartProperties);
-            
+            /*
             if (!File.Exists(@"C:\Users\1080622\Documents\code\deenee\campaigns\test.campaign")) {
                 Main.campaign = Campaign.New(@"C:\Users\1080622\Documents\code\deenee\campaigns", "test");
             }
@@ -31,6 +31,7 @@ namespace Deenee {
             Main.campaign.Maps.Add(map);
             Console.WriteLine(Main.campaign.Maps.Count);
             Map = Main.campaign.Maps[0];
+            */
         }
 
         public override void OnUpdate(OnUpdateProperties onUpdateProperties) {
