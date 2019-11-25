@@ -1,15 +1,7 @@
-﻿using System;
+﻿using System;   
 using System.Collections.Generic;
 
 namespace Deenee {
-    public class MenuEntry {
-        public Dictionary<string, MenuEntry> SubEntires { get; set; } = null;
-        public Action Function { get; set; } = null;
-    }
-    public interface IMenuOpenable {
-
-        MenuEntry Menu { get; }
-    }
     public class TestBehavior : MainBehavior, IMenuOpenable {
 
         public MenuEntry Menu { get; set; } = new MenuEntry {
