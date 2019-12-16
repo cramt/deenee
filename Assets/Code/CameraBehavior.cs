@@ -1,10 +1,6 @@
-<<<<<<< HEAD
 ﻿using PowerUI;
 using System;
 using System.Collections.Generic;
-=======
-﻿using System.Collections.Generic;
->>>>>>> f2da88ebba7e6bdc7e3d09f6a51a64cfd58fb172
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
