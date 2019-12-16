@@ -334,8 +334,8 @@ namespace Deenee {
             base.OnUpdate(onUpdateProperties);
             discord.RunCallbacks();
         }
-        public override void OnApplicationQuit(OnApplicationQuitProperties onUpdateProperties) {
-            base.OnApplicationQuit(onUpdateProperties);
+        public override void OnAppQuit(OnApplicationQuitProperties onUpdateProperties) {
+            base.OnAppQuit(onUpdateProperties);
             discord.Dispose();
         }
 

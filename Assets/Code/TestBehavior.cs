@@ -35,8 +35,8 @@ namespace Deenee {
             }
         };
 
-        public override void OnApplicationQuit(OnApplicationQuitProperties onUpdateProperties) {
-            base.OnApplicationQuit(onUpdateProperties);
+        public override void OnAppQuit(OnApplicationQuitProperties onUpdateProperties) {
+            base.OnAppQuit(onUpdateProperties);
         }
 
         public override void OnStart(OnStartProperties onStartProperties) {

@@ -44,7 +44,7 @@ namespace Deenee {
             OnUpdate(props);
         }
         private void OnApplicationQuit() {
-            OnApplicationQuit(new OnApplicationQuitProperties());
+            OnAppQuit(new OnApplicationQuitProperties());
         }
         /// <summary>
         /// overwrite this for a method that is run when the object starts existing
@@ -56,7 +56,7 @@ namespace Deenee {
         /// </summary>
         /// <param name="onUpdateProperties">properties for updating</param>
         public virtual void OnUpdate(OnUpdateProperties onUpdateProperties) { }
-        public virtual void OnApplicationQuit(OnApplicationQuitProperties onUpdateProperties) { }
+        public virtual void OnAppQuit(OnApplicationQuitProperties onUpdateProperties) { }
 
         //listeners for all kinds of collision
 
