@@ -1,10 +1,14 @@
 ﻿using PowerUI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Deenee {
     public class UIBehavior : MainBehavior {
         public WorldUIHelper WorldUI;
         public HtmlDocument document;
+        public Dictionary<string, object> arguments = new Dictionary<string, object>();
         protected string htmlFile = null;
         public override void OnStart(OnStartProperties onStartProperties) {
             base.OnStart(onStartProperties);
@@ -16,6 +20,10 @@ namespace Deenee {
             WorldUI.transform.eulerAngles = Vector3.zero;
             document = WorldUI.document;
             WorldUI.transform.SetParent(this.transform);
+
+            arguments.ToList().ForEach(x => {
+                document.JavascriptEngine.Engine.SetValue(x.Key, x.Value);
+            });
         }
     }
 }

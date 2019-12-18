@@ -91,12 +91,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8ed48e7a9942e74e9dcb32e546fdd69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HtmlFile: {fileID: 4900000, guid: e4ab350cc18832149ab26a1e8c04c16b, type: 3}
+  HtmlFile: {fileID: 4900000, guid: 4f6880ed829ea624790e944d03bde90f, type: 3}
   Url: 
   WatchForChanges: 0
   LengthScale: 1
   AutomaticallyHandleDpi: 1
-  HtmlFilePath: Assets/Resources/BasicHtml.html
+  HtmlFilePath: Assets/Resources/BasicHtml.html.bytes
   InputEnabled: 1
   PixelWidth: 800
   AlwaysFaceTheCamera: 0
