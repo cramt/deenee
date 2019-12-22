@@ -115,7 +115,7 @@ namespace Deenee.Mod {
         }
 
         public void Run() {
-            DeEngine.DeEngine engine = new DeEngine.DeEngine(package, path);
+            
         }
 
         private void evaluate() {
