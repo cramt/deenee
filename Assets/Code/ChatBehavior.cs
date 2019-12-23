@@ -14,6 +14,7 @@ namespace Deenee {
         public override void OnStart(OnStartProperties onStartProperties) {
             base.OnStart(onStartProperties);
 
+            /*
             ChatInput.onEndEdit.AddListener(new UnityEngine.Events.UnityAction<string>(str => {
                 if (str.StartsWith("/")) {
                     str += str.Substring(1);
@@ -29,6 +30,7 @@ namespace Deenee {
 
                 });
             }));
+            */
         }
 
         public override void OnUpdate(OnUpdateProperties onUpdateProperties) {
