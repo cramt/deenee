@@ -79,7 +79,7 @@ public class TriLibCheckPlugins : IPreprocessBuild, IPostprocessBuild
                             var pluginsDirectory = pluginsDirectories[0];
                             if (pluginsDirectory.GetDirectories("Windows").Length == 0 && pluginsDirectory.GetDirectories("OSX").Length == 0 && pluginsDirectory.GetDirectories("Linux").Length == 0)
                             {
-                                EditorUtility.DisplayDialog("TriLib", "Looks like you have an old TriLib install mixed with the newest update.\nPlease make a clean TriLib install (remove all TriLib files and install TriLib again).", "Ok");
+                                
                             }
                         }
                     }
