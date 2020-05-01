@@ -4,7 +4,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
-using TriLib;
 using UnityEngine;
 
 namespace Deenee {
@@ -49,14 +48,7 @@ namespace Deenee {
                         if (objFilter.Extensions.Contains(ext.ToUpper())) {
                             byte[] data = File.ReadAllBytes(path);
                             Main.campaign.AddObject(name, data);                   
-                            InvokeFunction(() => {
-                                using (var assetLoader = new AssetLoader()) {
-                                    var assetLoaderOptions = AssetLoaderOptions.CreateInstance();
-                                    var newObj = assetLoader.LoadFromMemory(data, name, assetLoaderOptions, Map.Campaign.CachedObjectHandler);
-                                    newObj.name = name;
-                                    UpdateCache();
-                                }
-                            });
+                            //TODO: actually do this
                         }
                         else {
 
