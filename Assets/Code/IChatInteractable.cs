@@ -3,7 +3,7 @@
         string Text { get; }
     }
     public interface IChatInteractable {
-        string[] Comamnds { get; }
+        string[] Commands { get; }
         uint MinArg { get; }
         uint MaxArg { get; }
         IChatEntry Call(string[] args);

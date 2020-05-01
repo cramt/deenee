@@ -6,18 +6,16 @@ using System.Linq;
 namespace Deenee {
     public class ChatDice : IChatInteractable {
         public class ChatDiceEntry : IChatEntry {
-            public string Text {
-                get { return dice.NumberResult + " = " + dice.StringResult; }
-            }
+            public string Text => dice.NumberResult + " = " + dice.StringResult;
 
-            private Dice dice;
+            private readonly Dice dice;
 
             public ChatDiceEntry(Dice dice) {
                 this.dice = dice;
             }
         }
 
-        public string[] Comamnds { get; } = new string[] {"r", "roll"};
+        public string[] Commands { get; } = new string[] {"r", "roll"};
 
         public uint MinArg { get; } = 1;
 
@@ -43,45 +41,45 @@ namespace Deenee {
             }
         }
 
-        private static readonly char[] operatorOrder = new char[] {'+', '-', '*', '/', '^', 'd'};
+        private static readonly char[] OperatorOrder = new char[] {'+', '-', '*', '/', '^', 'd'};
         private Node rootNode;
 
         public Dice(string diceString) {
             diceString = Regex.Replace(diceString, @"\s+", "");
             rootNode = new Node(diceString);
 
-            void traverse(Node node) {
+            void Traverse(Node node) {
                 if (node.Value[0] == '(' && node.Value[node.Value.Length - 1] == ')') {
                     node.Value = node.Value.Substring(1, node.Value.Length - 2);
                 }
 
-                for (int i = 0; i < operatorOrder.Length; i++) {
+                foreach (char t in OperatorOrder) {
                     bool inParentheses = false;
                     for (int j = 0; j < node.Value.Length; j++) {
-                        if (node.Value[j] == '(') {
-                            inParentheses = true;
-                        }
-                        else if (node.Value[j] == ')') {
-                            inParentheses = true;
+                        switch (node.Value[j]) {
+                            case '(':
+                            case ')':
+                                inParentheses = true;
+                                break;
                         }
 
                         if (inParentheses) {
                             continue;
                         }
 
-                        if (node.Value[j] == operatorOrder[i]) {
-                            node.Left = new Node(node.Value.Substring(0, j));
-                            node.Right = new Node(node.Value.Substring(j + 1, node.Value.Length - (j + 1)));
-                            node.Value = node.Value[j].ToString();
-                            traverse(node.Left);
-                            traverse(node.Right);
-                            return;
-                        }
+                        if (node.Value[j] != t) continue;
+                        
+                        node.Left = new Node(node.Value.Substring(0, j));
+                        node.Right = new Node(node.Value.Substring(j + 1, node.Value.Length - (j + 1)));
+                        node.Value = node.Value[j].ToString();
+                        Traverse(node.Left);
+                        Traverse(node.Right);
+                        return;
                     }
                 }
             }
 
-            traverse(rootNode);
+            Traverse(rootNode);
         }
 
         public double NumberResult { get; private set; }
@@ -90,7 +88,7 @@ namespace Deenee {
         public void Calculate() {
             StringResult = "";
 
-            double traverse(Node node) {
+            double Traverse(Node node) {
                 if (node.Left == null && node.Right == null) {
                     StringResult += node.Value;
                     return float.Parse(node.Value);
@@ -98,9 +96,9 @@ namespace Deenee {
                 else {
                     double res = 0.0;
                     StringResult += "(";
-                    double left = traverse(node.Left);
+                    double left = Traverse(node.Left);
                     StringResult += node.Value;
-                    double right = traverse(node.Right);
+                    double right = Traverse(node.Right);
                     switch (node.Value[0]) {
                         case '+':
                             res = left + right;
@@ -136,7 +134,7 @@ namespace Deenee {
                 }
             }
 
-            NumberResult = traverse(rootNode);
+            NumberResult = Traverse(rootNode);
         }
     }
 }
